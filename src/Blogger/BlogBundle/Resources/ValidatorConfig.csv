@@ -1,0 +1,10 @@
+
+
+
+
+
+.txt; max: 10000; stopwords: first1
+.txt; max: 999999; stopwords:4444
+.wav; max: 999999999;
+.avi;
+.image; max: 1000000;

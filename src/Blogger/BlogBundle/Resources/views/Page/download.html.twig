@@ -1,0 +1,17 @@
+{% extends 'BloggerBlogBundle::layout.html.twig' %}
+
+{% block title %}Download{% endblock%}
+
+{% block body %}
+    <header>
+        <h1>About loader</h1>
+    </header>
+    <article>
+        <h1>Upload File</h1>
+
+        <form action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <input type="submit" value="Upload Document" />
+        </form>
+    </article>
+{% endblock %}

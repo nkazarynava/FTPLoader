@@ -1,0 +1,7 @@
+{% extends 'BloggerBlogBundle::layout.html.twig' %}
+
+{% block body %}
+    {% if  not is_granted('IS_AUTHENTICATED_FULLY')%}
+        Please login to load a file
+    {% endif %}
+{% endblock %}

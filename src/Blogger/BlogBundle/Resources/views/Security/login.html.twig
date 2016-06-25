@@ -1,0 +1,42 @@
+{% extends "BloggerBlogBundle::layout.html.twig" %}
+
+{% block title %}
+    symfony2 login
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block body %}
+
+    You need to be logged in to see the page. <br>
+
+    {% if error %}
+        <div class="error">{{ error.message }}</div>
+    {% endif %}
+
+    <form action="{{ path('_security_check') }}" method="POST">
+        <table>
+            <tr>
+                <td>
+                    <label for="username">Login</label>
+                </td>
+                <td>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password</label>
+                </td>
+                <td>
+                    <input type="password" id="password" name="_password" />
+                </td>
+            </tr>
+        </table>
+        <input type="submit" name="login" value="Send" />
+    </form>
+
+    <a href="{{ path('BloggerBlogBundle_register') }}">Register</a>
+{% endblock %}

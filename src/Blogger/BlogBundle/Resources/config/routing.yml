@@ -1,0 +1,33 @@
+_security_login:
+    path:  /login
+    defaults: { _controller: "BloggerBlogBundle:Security:login" }
+
+_security_check:
+    path:  /login_check
+
+_security_logout:
+    path:  /logout
+
+BloggerBlogBundle_homepage:
+    path:     /
+    defaults: { _controller: "BloggerBlogBundle:Page:index" }
+    requirements:
+         methods:  GET
+
+BloggerBlogBundle_download:
+    path:   /download
+    defaults: { _controller: "BloggerBlogBundle:Page:download" }
+    requirements:
+         methods:  GET
+
+BloggerBlogBundle_register:
+    path:   /register
+    defaults: { _controller: "BloggerBlogBundle:Registration:register" }
+    requirements:
+         methods:  GET
+
+BloggerBlogBundle_admin_home:
+    path:  /admin
+    defaults: { _controller: "BloggerBlogBundle:Admin:index" }
+    requirements:
+         methods:  GET

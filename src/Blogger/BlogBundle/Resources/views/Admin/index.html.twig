@@ -1,0 +1,17 @@
+{# src/Blogger/BlogBundle/Resources/views/Page/index.html.twig #}
+{% extends 'BloggerBlogBundle::layout.html.twig' %}
+
+{% block title %}Servers administration{% endblock%}
+
+{% block body %}
+    <header xmlns="http://www.w3.org/1999/html">
+        <h1>Administaration</h1>
+    </header>
+    <article>
+        Administrate servers </br>
+            <h2>
+                Welcome to the administration page, {{ app.user.username }}!
+            </h2>
+
+    </article>
+{% endblock %}
