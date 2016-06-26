@@ -1,5 +1,7 @@
 <?php
 namespace Blogger\BlogBundle\Validator;
+
+use Blogger\BlogBundle\Validator\ValidatorConfig;
 /**
  * Created by PhpStorm.
  * User: Natalia
@@ -24,7 +26,7 @@ namespace Blogger\BlogBundle\Validator;
 
      private function _retrieveRuleNameFromConstant() {
          $sClassName = get_class($this);
-         $aNameMapping = RULE_NAME_CHECKER_CLASS_MAPPING;
+         $aNameMapping = ValidatorConfig::RULE_NAME_CHECKER_CLASS_MAPPING;
          $aClassNameMapping = array_flip($aNameMapping);
          return isset($aClassNameMapping[$sClassName]) ? $aClassNameMapping[$sClassName] : false;
      }

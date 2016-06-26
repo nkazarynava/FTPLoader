@@ -1,29 +1,17 @@
 <?php
 namespace Blogger\BlogBundle\Validator;
-
-const RULE_EXT_NAME = 'ext';
-const RULE_MAXSIZE_NAME = 'max';
-const RULE_STOPW_NAME = 'stopwords';
-const CONFIGURATION_FILE_PATH = '/../Resources/';
-const CONFIGURATION_FILE_NAME = 'ValidatorConfig.csv';
-const RULE_DELIMITER = ';';
-const RULE_NAME_DELIMITER = ':';
-const RULE_NAME_CHECKER_CLASS_MAPPING = array (
-         RULE_EXT_NAME => 'fileTypeChecker',
-         RULE_MAXSIZE_NAME => 'fileMaxSizeChecker',
-         RULE_STOPW_NAME => 'fileStopPhraseChecker'
-      );
+use Blogger\BlogBundle\Validator\ValidatorConfig;
 
 class ValidationStringReader {
 
     private $_configurationFile;
 
-    //private $_aRulesNamesCheckRuleClassMapping;
+    private $_currentLineNmr = 0;
 
     private $_aRulesNames;
 
-    private $_endFileMark = 'STOP';
-
+    //private $_endFileMark = 'STOP';
+    private $_isEOF = false;
     private static $_instance;
 
     public static function getInstance() {
@@ -33,32 +21,33 @@ class ValidationStringReader {
         return self::$_instance;
     }
 
+    public function isEOF(){
+        return $this->_isEOF;
+    }
+
     public function getRulesArrayFromCurrentLine() {
         $aRulesValues = $this->_parseNextRulesArray();
-        if ($aRulesValues === $this->_endFileMark) {
-            return false;
-        }
+        if ($this->_isEOF)
+            return;
         return $aRulesValues;
     }
 
+    public function getCurrentLineNumber() {
+        return $this->_currentLineNmr;
+    }
+
     private function getConfigurationFilePath () {
-        return __DIR__ . CONFIGURATION_FILE_PATH . CONFIGURATION_FILE_NAME;
+        return __DIR__ . ValidatorConfig::CONFIGURATION_FILE_PATH . ValidatorConfig::CONFIGURATION_FILE_NAME;
     }
 
     private function __construct() {
-        $this->_aRulesNames = array_keys(RULE_NAME_CHECKER_CLASS_MAPPING);
+        $this->_aRulesNames = array_keys( ValidatorConfig::RULE_NAME_CHECKER_CLASS_MAPPING);
         try {
             $file = new \SplFileObject( $this->getConfigurationFilePath () );
-            /*$file->setFlags(\SplFileObject::READ_CSV);
-            $file->setFlags(\SplFileObject::SKIP_EMPTY);
-            $file->setFlags(\SplFileObject::DROP_NEW_LINE);
-            $file->setFlags(\SplFileObject::READ_AHEAD);*/
             $this->_configurationFile = $file;
-
         } catch (\Exception $e) {;
             die($e->getMessage());
         }
-
     }
 
     /*
@@ -69,16 +58,20 @@ class ValidationStringReader {
          $aRules = $this->_readNextRulesLineToArray ();// explode(CHECKER_NAME_DELIMITER,);
 
          //all validation configuration file has been read
-         if ($aRules ===  $this->_endFileMark)
-             return $this->_endFileMark ;
+         if ($this->_isEOF)
+             return;
 
-         $explodeFunction = function($string) {
+         /*$explodeFunction = function($string) {
                 $aRes = explode(RULE_NAME_DELIMITER, $string);
                 $aRes = array_map("trim",$aRes);
                 return $aRes;
              };
 
-         $aRules = array_map($explodeFunction, $aRules);
+         $aRules = array_map($explodeFunction, $aRules);*/
+         foreach ($aRules as $key => &$sValue) {
+             $aRuleData = explode(ValidatorConfig::RULE_NAME_DELIMITER, $sValue);
+             $sValue = array_map("trim", $aRuleData);
+         }
 
          //check extension
          $sExtensionPattern = '/^\.[0-9a-z]{1,5}$/i';
@@ -90,29 +83,39 @@ class ValidationStringReader {
               if (count($aRule) == 1) {
                   preg_match($sExtensionPattern, $aRule[0], $aExtensionMatches);
                   if (count($aExtensionMatches)) {
-                      $aResult[RULE_EXT_NAME] = $aRule[0];
+                      $aResult[ValidatorConfig::RULE_EXT_NAME] = $aRule[0];
                   }
                   continue;
               }
              $aResult[$aRule[0]] = $aRule[1];
          }
 
-         $aResult = array_intersect_key($aResult, RULE_NAME_CHECKER_CLASS_MAPPING);
+         $aResult = array_intersect_key($aResult, ValidatorConfig::RULE_NAME_CHECKER_CLASS_MAPPING);
          return $aResult;
     }
 
     private function _readNextRulesLineToArray () {
 
-        if ($this->_configurationFile->eof())
-            return $this->_endFileMark ;
+        if ($this->_configurationFile->eof()){
+            $this->_isEOF = true;
+            return;// $this->_endFileMark ;
+        }
 
-        //skip empty or ?? invalid lines
-        $aResult = $this->_configurationFile->fgetcsv(RULE_DELIMITER);
 
-        while (empty($aResult) || is_array($aResult) && empty($aResult[0])) {
-            if ($this->_configurationFile->eof())
-                return $this->_endFileMark;
-            $aResult = $this->_configurationFile->fgetcsv(RULE_DELIMITER);
+        $this->_currentLineNmr++;
+        $aResult = $this->_configurationFile->fgetcsv(ValidatorConfig::RULE_DELIMITER);
+
+        //skip empty lines
+        while ( is_array($aResult) && is_null($aResult[0])) {
+
+            if ($this->_configurationFile->eof()) {
+                $this->_isEOF = true;
+                return;
+            }
+                //return $this->_endFileMark;
+
+            $this->_currentLineNmr++;
+            $aResult = $this->_configurationFile->fgetcsv(ValidatorConfig::RULE_DELIMITER);
         }
 
         return  $aResult;
