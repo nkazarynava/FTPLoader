@@ -9,18 +9,21 @@ use Blogger\BlogBundle\Validator\ValidatorConfig;
 
      private static $_instance;
 
+     private $_aValidationFails;
+     private $_aValidationSuccessLine;
+
      private function __construct() {
 
      }
 
-     public function getInstance() {
+     public static function getInstance() {
          if (empty(self::$_instance)){
              self::$_instance = new Validator();
          }
          return self::$_instance;
      }
 
-     public static function validate($aFileData) {
+     public function validate($aFileData) {
 
          $oFileData = new ComparedDataContainer($aFileData);
          $oReader = ValidationStringReader::getInstance();
@@ -28,6 +31,7 @@ use Blogger\BlogBundle\Validator\ValidatorConfig;
 
          do {
              $aRulesData = $oReader->getRulesArrayFromCurrentLine();
+
              if ( $oReader->isEOF()) {
                  return false;
              }
@@ -39,25 +43,39 @@ use Blogger\BlogBundle\Validator\ValidatorConfig;
 
              foreach ($aRulesData as $sRuleName => $sRuleValue) {
 
-                 if (!isset($aMappingArray[$sRuleName])) {
+                 //it is never be the case
+                 /*if (!isset($aMappingArray[$sRuleName])) {
                      throw new Exception('Wrong parameter in configuration file ('.ValidatorConfig::CONFIGURATION_FILE_PATH . ValidatorConfig::CONFIGURATION_FILE_NAME.') on line:' . $oReader->getCurrentLineNumber());
-                 }
-                 $sCheckerClassName = $aMappingArray[$sRuleName];
+                 }*/
+                 $sCheckerClassName = __NAMESPACE__."\\".$aMappingArray[$sRuleName];
 
                  if (!class_exists($sCheckerClassName)) {
                      throw new Exception("There is no no checker class defined for rule $sRuleName, needed class $sCheckerClassName");
                  }
-                   //  continue;
+
                  $oChecker = new $sCheckerClassName($oFileData , $oRulesData);
                  $bCheckResult = $oChecker->check();
 
                  //validation failed - move to the next configuration file line
-                 if (!$bCheckResult) continue 2;
+                 if (!$bCheckResult) {
+                     //just for test
+                     $this->_aValidationFails[$oReader->getCurrentLineNumber()] = $oChecker->getRuleName();
+                     continue 2;
+                 }
              }
-
+             //just for test
+             $this->_aValidationSuccessLine = $aRulesData;
              return true;
 
          } while (true);
+     }
 
+     //just for test
+     public function getValidationFails() {
+         return $this->_aValidationFails;
+     }
+
+     public function getValidationSuccessLine() {
+         return $this->_aValidationSuccessLine;
      }
  }

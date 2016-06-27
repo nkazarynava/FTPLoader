@@ -8,7 +8,7 @@
  */
 namespace Blogger\BlogBundle\Validator;
 
-interface RuleChecker {
+interface RuleCheckerInterface {
 
     public function check();
     public function getRuleName();

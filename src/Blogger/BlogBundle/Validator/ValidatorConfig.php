@@ -16,9 +16,9 @@ class ValidatorConfig {
     const RULE_DELIMITER = ';';
     const RULE_NAME_DELIMITER = ':';
     const RULE_NAME_CHECKER_CLASS_MAPPING = array (
-        self::RULE_EXT_NAME => 'fileTypeChecker',
-        self::RULE_MAXSIZE_NAME => 'fileMaxSizeChecker',
-        self::RULE_STOPW_NAME => 'fileStopPhraseChecker'
+        self::RULE_EXT_NAME => 'FileTypeChecker',
+        self::RULE_MAXSIZE_NAME => 'FileMaxSizeChecker',
+        self::RULE_STOPW_NAME => 'FileStopPhraseChecker'
     );
 
 }

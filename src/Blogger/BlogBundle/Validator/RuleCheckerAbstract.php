@@ -2,6 +2,8 @@
 namespace Blogger\BlogBundle\Validator;
 
 use Blogger\BlogBundle\Validator\ValidatorConfig;
+use Blogger\BlogBundle\Validator\RuleCheckerInterface;
+use Blogger\BlogBundle\Validator\ComparedDataContainer;
 /**
  * Created by PhpStorm.
  * User: Natalia
@@ -9,12 +11,12 @@ use Blogger\BlogBundle\Validator\ValidatorConfig;
  * Time: 18:26
  */
 
- abstract class RuleCheckerAbstract implements \RuleChecker {
-     private $_oFileData;
-     private $_oRulesConfigData;
-     private $_sRuleName;
+ abstract class RuleCheckerAbstract implements RuleCheckerInterface {
+     protected $_oFileData;
+     protected $_oRulesConfigData;
+     protected $_sRuleName;
 
-     public function __construct (\ComparedDataContainer $oFileData, \ComparedDataContainer $oRulesConfigData) {
+     public function __construct (ComparedDataContainer $oFileData, ComparedDataContainer $oRulesConfigData) {
          $this->_oFileData = $oFileData;
          $this->_oRulesConfigData = $oRulesConfigData;
          $this->_sRuleName = $this->_retrieveRuleNameFromConstant();
@@ -26,6 +28,8 @@ use Blogger\BlogBundle\Validator\ValidatorConfig;
 
      private function _retrieveRuleNameFromConstant() {
          $sClassName = get_class($this);
+         $oReflection = new \ReflectionClass($sClassName);
+         $sClassName = $oReflection->getShortName();
          $aNameMapping = ValidatorConfig::RULE_NAME_CHECKER_CLASS_MAPPING;
          $aClassNameMapping = array_flip($aNameMapping);
          return isset($aClassNameMapping[$sClassName]) ? $aClassNameMapping[$sClassName] : false;

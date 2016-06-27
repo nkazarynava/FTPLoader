@@ -72,7 +72,6 @@ class ValidationStringReader {
              $aRuleData = explode(ValidatorConfig::RULE_NAME_DELIMITER, $sValue);
              $sValue = array_map("trim", $aRuleData);
          }
-
          //check extension
          $sExtensionPattern = '/^\.[0-9a-z]{1,5}$/i';
          $aExtensionMatches = array();
