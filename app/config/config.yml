@@ -64,3 +64,25 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'localhost'
+            port:     5672
+            user:     'guest'
+            password: 'guest'
+            vhost:    '/'
+            lazy:     true
+    producers:
+        hello_world:
+            connection:       default
+            exchange_options: {name: 'hello', type: direct}
+            class: Blogger\BlogBundle\Rabbit\HelloProducer
+    consumers:
+        hello_world:
+            connection:       default
+            exchange_options: {name: 'hello', type: direct}
+            queue_options:    {name: 'hello'}
+            callback:         hello_world_service
+            idle_timeout:     180

@@ -36,6 +36,16 @@ class RegistrationController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
+
+            /*
+             *
+             * $user = new User('login');
+$presentUsers = $em->getRepository('MyProject\Domain\User')->findBy(array('login' => 'login'));
+if (count($presentUsers)>0) {
+    // this login is already taken (throw exception)
+}
+             *
+             */
             // 4) save the User!
             try {
 

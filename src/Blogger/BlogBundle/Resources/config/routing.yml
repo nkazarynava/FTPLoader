@@ -31,3 +31,9 @@ BloggerBlogBundle_admin_home:
     defaults: { _controller: "BloggerBlogBundle:Admin:index" }
     requirements:
          methods:  GET
+
+BloggerBlogBundle_rabbit_publish:
+    path: /rabbitpublish
+    defaults: {_controller: "BloggerBlogBundle:Rabbit:index"}
+    requirements:
+         methods: GET
