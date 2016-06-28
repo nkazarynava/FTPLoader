@@ -9,5 +9,6 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
     hello_world_service:
         class: Blogger\BlogBundle\Rabbit\HelloWorldConsumer
+        arguments: ['@doctrine']
 
 

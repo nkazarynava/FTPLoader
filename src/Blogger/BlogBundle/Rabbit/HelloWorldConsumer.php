@@ -12,10 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 class HelloWorldConsumer implements ConsumerInterface {
+    private $_doctrine;
+    public function __construct($doctrine)
+    {
+        $this->_doctrine = $doctrine;
+    }
     public function execute(AMQPMessage $msg) {
         $request = Request::createFromGlobals();
-        $sTest = $request->getPathInfo();
-       // $request->getBaseUrl();
-        echo "Hello $sTest . $msg->body!".PHP_EOL;
+        $testRole = $this->_doctrine->getRepository('BloggerBlogBundle:Role')
+            ->find(3);
+        $sRole = $testRole->getRole();
+        $this->_doctrine->getManager()->getConnection()->close();
+        //$entityManager->
+        //var_dump($this->_em);
+        //$sTest = $request->getUri();
+        echo "Hello $sRole $msg->body!".PHP_EOL;
     }
 }
