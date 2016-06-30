@@ -20,6 +20,16 @@ BloggerBlogBundle_download:
     requirements:
          methods:  GET
 
+BloggerBlogBundle_chunkdownload:
+    path:   /chunkdownload
+    defaults: { _controller: "BloggerBlogBundle:Page:chunkdownload" }
+    requirements:
+         methods:  GET
+
+BloggerBlogBundle_savechunk:
+    path:   /savechunk
+    defaults: { _controller: "BloggerBlogBundle:Page:savechunk" }
+
 BloggerBlogBundle_register:
     path:   /register
     defaults: { _controller: "BloggerBlogBundle:Registration:register" }

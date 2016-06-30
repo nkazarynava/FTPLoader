@@ -8,8 +8,11 @@ use Blogger\BlogBundle\Form\FileUploadType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Blogger\BlogBundle\Validator\Validator;
 use Blogger\BlogBundle\Validator\ValidatorConfig;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Blogger\BlogBundle\ChunkUploader\ChunkUploadedFile;
 
 class PageController extends Controller
 {
@@ -20,8 +23,7 @@ class PageController extends Controller
 
     public function downloadAction(Request $request)
     {
-        //$test = new FileValidator();
-        //die('controller');
+        
         $file = new UplFile();
         $form = $this->createForm(FileUploadType::class, $file);
         $form->handleRequest($request);
@@ -58,8 +60,22 @@ class PageController extends Controller
 
     }
 
-   /* public function adminAction()
-    {
-        return $this->render('BloggerBlogBundle:Page:admin.html.twig');
-    }*/
+    public function chunkdownloadAction(Request $request) {
+        return $this->render('BloggerBlogBundle:Page:chunkdownload.html.twig');
+    }
+
+    public function savechunkAction(Request $request) {
+
+        $oUser =  $this->getUser();
+        $sUploadsLocalPath =  $this->container->getParameter('uploads_directory');
+
+        $oChunkSaver = new ChunkUploadedFile($request, $oUser, $sUploadsLocalPath);
+
+        $oChunkSaver->saveChunk();
+
+        $sResponse = $oChunkSaver->getJsonResponse();
+
+        return new Response($sResponse);
+    }
+
 }

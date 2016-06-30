@@ -23,7 +23,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "php-amqplib/rabbitmq-bundle": "^1.10",
         "videlalvaro/php-amqplib": "v2.4.0",
-        "oldsound/rabbitmq-bundle": "1.5.*"
+        "oldsound/rabbitmq-bundle": "1.5.*",
+        "symfony/assetic-bundle": "^2.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

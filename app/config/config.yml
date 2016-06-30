@@ -86,3 +86,8 @@ old_sound_rabbit_mq:
             queue_options:    {name: 'hello'}
             callback:         hello_world_service
             idle_timeout:     180
+assetic:
+    debug:          '%kernel.debug%'
+    use_controller: '%kernel.debug%'
+    filters:
+        cssrewrite: ~

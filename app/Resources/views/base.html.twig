@@ -6,6 +6,8 @@
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    {% block MyJavascript %}
+    {% endblock %}
     {% block stylesheets %}
         <link href='http://fonts.googleapis.com/css?family=Irish+Grover' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=La+Belle+Aurore' rel='stylesheet' type='text/css'>
@@ -25,6 +27,7 @@
                         {% if is_granted('ROLE_USER') %}
                             <li><a href="{{ path('BloggerBlogBundle_download') }}">Download</a></li>
                             <li><a href="{{ path('BloggerBlogBundle_rabbit_publish') }}" >Publish Message</a></li>
+                            <li><a href="{{ path('BloggerBlogBundle_chunkdownload') }}">chunkDownload</a> </li>
                         {% endif %}
                         {% if  is_granted('ROLE_ADMIN') %}
                             <li><a href="{{ path('BloggerBlogBundle_admin_home') }}">Admin</a></li>
