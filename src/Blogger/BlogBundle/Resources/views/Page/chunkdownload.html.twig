@@ -38,15 +38,47 @@
             }
         });
 
-        uploader.bind('FileUploaded', function(Up, File, Response) {});
-        uploader.bind('ChunkUploaded', function(up, file, info){
+        uploader.bind('FileUploaded', function(Up, File, Response) {
+
         });
+        uploader.bind('ChunkUploaded', function(up, file, info){
+
+        });
+
+        var checkServerResponse = function(Response){
+            var myData;
+            try {
+                myData = eval(Response.response);
+            } catch(err) {
+                myData = eval('(' + Response.response + ')');
+            }
+            if (myData.OK == 1) {
+                return true;
+            }
+            return false;
+        }
+
+
 
         uploader.bind('FilesAdded', function(up, files) {
             var html = '';
             plupload.each(files, function(file) {
                 html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
                 uploader.settings.multipart_params["fullsize"] = file.size;
+                //increase peace size in case of big file
+                var fileSize = file.size;
+                var chunkSize = 0;
+
+                if (fileSize < 10000000) {
+                    chunkSize = 200000;
+                } else if (fileSize < 500000000) {
+                    chunkSize = 1500000;
+                } else {
+                    chunkSize = 2000000;
+                }
+
+                uploader.settings.chunk_size =  chunkSize;
+                               
             });
             document.getElementById('filelist').innerHTML += html;
         });

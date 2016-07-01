@@ -40,7 +40,7 @@ class HelloWorldConsumer implements ConsumerInterface {
             CURLOPT_TIMEOUT        => 120,    // time-out on response
         );
 
-        //??????? ????? cURL-????????????
+
         $mh = curl_multi_init();
         //for saving links to resources (of type resource) created below
         $handles = array();
